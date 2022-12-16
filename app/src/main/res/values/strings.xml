@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">HomeStart</string>
+
+    <string name="pref">Settings</string>
+
+    <string name="str_cancel">Cancel</string>
+    <string name="str_name">Name</string>
+    <string name="str_rename">Rename</string>
+    <string name="str_edit">Edit</string>
+    <string name="str_delete">Delete</string>
+    <string name="str_show">Show</string>
+    <string name="str_done">Done</string>
+    <string name="str_add">Add</string>
+    <string name="str_send">Send</string>
+    <string name="str_on">On</string>
+    <string name="str_off">Off</string>
+    <string name="str_yes">Yes</string>
+    <string name="str_no">No</string>
+    <string name="str_unreachable">Unreachable</string>
 </resources>
