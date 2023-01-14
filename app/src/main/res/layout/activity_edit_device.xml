@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/deviceIcn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/header_icon_height"
+                    android:layout_marginTop="@dimen/dialog_item_margin"
+                    android:contentDescription="@string/main_device_icon"
+                    app:srcCompat="@drawable/ic_device_lamp" />
+
+                <TextView
+                    android:id="@+id/nameTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dialog_item_margin"
+                    android:text="@string/pref_add_new_device"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:id="@+id/idTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dialog_item_margin"
+                    android:text="@string/pref_add_id"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/dialog_item_margin"
+                android:background="?attr/dividerColor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="?dialogPreferredPadding">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pref_add_name"
+                    app:helperTextEnabled="true"
+                    app:helperText="@string/pref_add_name_example">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dialog_item_margin"
+                    android:hint="@string/pref_add_address"
+                    app:helperTextEnabled="true"
+                    app:helperText="@string/pref_add_address_example">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/iconSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dialog_item_margin"
+                    android:hint="@string/pref_add_icon"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@null"
+                        android:focusable="false"
+                        android:inputType="none|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/modeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dialog_item_margin"
+                    android:hint="@string/pref_add_mode"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@null"
+                        android:focusable="false"
+                        android:inputType="none|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/specialDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/dividerColor" />
+
+            <LinearLayout
+                android:id="@+id/specialSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="?dialogPreferredPadding"
+                android:paddingEnd="?dialogPreferredPadding"
+                android:paddingBottom="?dialogPreferredPadding">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/usernameBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="?dialogPreferredPadding"
+                    android:hint="@string/security_username">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="?dialogPreferredPadding"
+                    android:hint="@string/security_password"
+                    app:endIconMode="password_toggle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/dividerColor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="?dialogPreferredPadding"
+                android:paddingVertical="@dimen/list_padding_vertical">
+
+                <CheckBox
+                    android:id="@+id/configDirectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_config_direct_view" />
+
+                <CheckBox
+                    android:id="@+id/configHide"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_config_hide" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/editDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/dividerColor" />
+
+            <LinearLayout
+                android:id="@+id/editSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="?dialogPreferredPadding"
+                android:paddingVertical="@dimen/list_padding_vertical">
+
+                <Button
+                    android:id="@+id/infoBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/list_button_padding_horizontal"
+                    android:text="@string/device_config_info"
+                    android:textAlignment="textStart"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:icon="@drawable/ic_info"/>
+
+                <Button
+                    android:id="@+id/configBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/list_button_padding_horizontal"
+                    android:text="@string/pref_device_config"
+                    android:textAlignment="textStart"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:icon="@drawable/ic_settings"/>
+
+                <Button
+                    android:id="@+id/shortcutBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/list_button_padding_horizontal"
+                    android:text="@string/pref_add_shortcut"
+                    android:textAlignment="textStart"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:icon="@drawable/ic_add"/>
+
+                <Button
+                    android:id="@+id/deleteBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/list_button_padding_horizontal"
+                    android:text="@string/str_delete"
+                    android:textAlignment="textStart"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:icon="@drawable/ic_delete"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/str_done"
+        app:srcCompat="@drawable/ic_done" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
