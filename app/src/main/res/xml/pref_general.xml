@@ -1,0 +1,75 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:title="@string/pref_general"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            app:defaultValue="auto"
+            app:entries="@array/pref_theme_array"
+            app:entryValues="@array/pref_theme_array_values"
+            app:key="theme"
+            app:summary="@string/pref_theme_summary"
+            app:title="@string/pref_theme"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:defaultValue="auto"
+            app:entries="@array/pref_columns_array"
+            app:entryValues="@array/pref_columns_array_values"
+            app:key="columns"
+            app:summary="@string/pref_columns_summary"
+            app:title="@string/pref_columns"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="controls_auth"
+            app:summary="@string/pref_controls_auth_summary"
+            app:title="@string/pref_controls_auth"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/pref_devices"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="devices"
+            app:summary="@string/pref_edit_summary"
+            app:title="@string/pref_edit"
+            app:iconSpaceReserved="false" />
+        <Preference
+            app:key="reset_json"
+            app:summary="@string/pref_reset_summary"
+            app:title="@string/pref_reset"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_advanced"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:defaultValue='{"devices":{}}'
+            app:key="devices_json"
+            app:summary="@string/pref_edit_text_summary"
+            app:title="@string/pref_edit_text"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="safety_checks"
+            app:summary="@string/pref_safety_checks_summary"
+            app:title="@string/pref_safety_checks"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_info"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="about"
+            app:title="@string/about"
+            app:summary="@string/about_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
