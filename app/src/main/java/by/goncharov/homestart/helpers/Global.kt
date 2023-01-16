@@ -13,6 +13,7 @@ import by.goncharov.homestart.R
 import by.goncharov.homestart.api.EspEasyAPI
 import by.goncharov.homestart.api.ShellyAPI
 import by.goncharov.homestart.api.SimpleHomeAPI
+import by.goncharov.homestart.api.Tasmota
 import by.goncharov.homestart.api.UnifiedAPI
 import by.goncharov.homestart.interfaces.HomeRecyclerViewHelperInterface
 import com.android.volley.ClientError
@@ -29,13 +30,15 @@ internal object Global {
         "ESP Easy",
         "Shelly Gen 1",
         "Shelly Gen 2",
-        "SimpleHome API"
+        "SimpleHome API",
+        "Tasmota"
     )
     val POWER_MENU_MODES = arrayOf(
         "ESP Easy",
         "Shelly Gen 1",
         "Shelly Gen 2",
-        "SimpleHome API"
+        "SimpleHome API",
+        "Tasmota"
     )
 
     fun getCorrectAPI(
@@ -48,6 +51,7 @@ internal object Global {
         return when (identifier) {
             "ESP Easy" -> EspEasyAPI(context, deviceId, recyclerViewInterface)
             "SimpleHome API" -> SimpleHomeAPI(context, deviceId, recyclerViewInterface)
+            "Tasmota" -> Tasmota(context, deviceId, tasmotaHelperInterface ?: recyclerViewInterface)
             "Shelly Gen 1" -> ShellyAPI(context, deviceId, recyclerViewInterface, 1)
             "Shelly Gen 2" -> ShellyAPI(context, deviceId, recyclerViewInterface, 2)
             else -> UnifiedAPI(context, deviceId, recyclerViewInterface)
