@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import by.goncharov.homestart.R
 import by.goncharov.homestart.api.EspEasyAPI
+import by.goncharov.homestart.api.HueAPI
 import by.goncharov.homestart.api.ShellyAPI
 import by.goncharov.homestart.api.SimpleHomeAPI
 import by.goncharov.homestart.api.Tasmota
@@ -31,14 +32,16 @@ internal object Global {
         "Shelly Gen 1",
         "Shelly Gen 2",
         "SimpleHome API",
-        "Tasmota"
+        "Tasmota",
+        "Hue API",
     )
     val POWER_MENU_MODES = arrayOf(
         "ESP Easy",
         "Shelly Gen 1",
         "Shelly Gen 2",
         "SimpleHome API",
-        "Tasmota"
+        "Tasmota",
+        "Hue API",
     )
 
     fun getCorrectAPI(
@@ -46,10 +49,11 @@ internal object Global {
         identifier: String,
         deviceId: String,
         recyclerViewInterface: HomeRecyclerViewHelperInterface? = null,
-        tasmotaHelperInterface: HomeRecyclerViewHelperInterface? = null
+        tasmotaHelperInterface: HomeRecyclerViewHelperInterface? = null,
     ): UnifiedAPI {
         return when (identifier) {
             "ESP Easy" -> EspEasyAPI(context, deviceId, recyclerViewInterface)
+            "Hue API" -> HueAPI(context, deviceId, recyclerViewInterface)
             "SimpleHome API" -> SimpleHomeAPI(context, deviceId, recyclerViewInterface)
             "Tasmota" -> Tasmota(context, deviceId, tasmotaHelperInterface ?: recyclerViewInterface)
             "Shelly Gen 1" -> ShellyAPI(context, deviceId, recyclerViewInterface, 1)
@@ -99,7 +103,9 @@ internal object Global {
         if (
             !PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean("safety_checks", true)
-        ) return true
+        ) {
+            return true
+        }
 
         val connectivityManager = context.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -107,7 +113,9 @@ internal object Global {
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
-        } else true
+        } else {
+            true
+        }
     }
 
     fun volleyError(c: Context, error: java.lang.Exception): String {
