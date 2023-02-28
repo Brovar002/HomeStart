@@ -1,0 +1,251 @@
+package by.goncharov.homestart.activities
+
+import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.Icon
+import android.os.Build
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.ImageViewCompat
+import androidx.viewpager2.widget.ViewPager2
+import by.goncharov.homestart.R
+import by.goncharov.homestart.adapters.HueDetailsTabAdapter
+import by.goncharov.homestart.api.HueAPI
+import by.goncharov.homestart.data.DeviceItem
+import by.goncharov.homestart.data.LightStates
+import by.goncharov.homestart.helpers.Devices
+import by.goncharov.homestart.helpers.HueLightListener
+import by.goncharov.homestart.helpers.HueUtils
+import by.goncharov.homestart.helpers.SliderUtils
+import by.goncharov.homestart.helpers.Theme
+import by.goncharov.homestart.helpers.UpdateHandler
+import by.goncharov.homestart.interfaces.HueRoomInterface
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.google.android.material.slider.Slider
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import org.json.JSONArray
+
+class HueLampActivity : AppCompatActivity(), HueRoomInterface {
+
+    override var addressPrefix: String = ""
+    override var id: String = ""
+    override var lights: JSONArray? = null
+    override var canReceiveRequest: Boolean = false
+    override var lampData: HueLightListener = HueLightListener()
+    override lateinit var device: DeviceItem
+    private var lampName: String = ""
+    private var updateDataRequest: JsonObjectRequest? = null
+    private var updateHandler: UpdateHandler = UpdateHandler()
+    private lateinit var hueAPI: HueAPI
+    private lateinit var queue: RequestQueue
+    private lateinit var lampIcon: ImageView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Theme.set(this)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_hue_lamp)
+
+        id = intent.getStringExtra("id") ?: "0"
+        if (intent.hasExtra("device")) {
+            val extraDevice = intent.getStringExtra("device") ?: ""
+            val devices = Devices(this)
+            if (devices.idExists(extraDevice)) {
+                device = devices.getDeviceById(extraDevice)
+            } else {
+                Toast.makeText(this, R.string.main_device_nonexistent, Toast.LENGTH_LONG).show()
+                finish()
+                return
+            }
+        }
+
+        hueAPI = HueAPI(this, device.id)
+        addressPrefix = device.address + "api/" + hueAPI.getUsername()
+        queue = Volley.newRequestQueue(this)
+        title = device.name
+        lampIcon = findViewById(R.id.lampIcon)
+        val nameTxt = findViewById<TextView>(R.id.nameTxt)
+        val briBar = findViewById<Slider>(R.id.briBar)
+        val tabBar = findViewById<TabLayout>(R.id.tabBar)
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
+
+        viewPager.isUserInputEnabled = false
+        viewPager.adapter = HueDetailsTabAdapter(this)
+
+        // Slider labels
+        briBar.setLabelFormatter { value: Float ->
+            HueUtils.briToPercent(value.toInt())
+        }
+
+        // Lamp tint
+        ImageViewCompat.setImageTintList(
+            lampIcon,
+            ColorStateList.valueOf(Color.WHITE),
+        )
+        lampData.addOnDataChangedListener {
+            ImageViewCompat.setImageTintList(
+                lampIcon,
+                ColorStateList.valueOf(
+                    if (it.hue != -1 && it.sat != -1) {
+                        HueUtils.hueSatToRGB(it.hue, it.sat)
+                    } else if (it.ct != -1) {
+                        HueUtils.ctToRGB(it.ct + 153)
+                    } else {
+                        Color.WHITE
+                    },
+                ),
+            )
+        }
+
+        findViewById<Button>(R.id.onBtn).setOnClickListener {
+            hueAPI.switchGroupByID(id, true)
+        }
+
+        findViewById<Button>(R.id.offBtn).setOnClickListener {
+            hueAPI.switchGroupByID(id, false)
+        }
+
+        briBar.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+                canReceiveRequest = false
+            }
+            override fun onStopTrackingTouch(slider: Slider) {
+                hueAPI.changeBrightnessOfGroup(id, slider.value.toInt())
+                canReceiveRequest = true
+            }
+        })
+
+        viewPager.setCurrentItem(1, false)
+
+        val tabIcons = arrayOf(
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_color_palette, theme),
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_scene_white, theme),
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_device_lamp, theme),
+        )
+        TabLayoutMediator(tabBar, viewPager) { tab, position ->
+            tab.icon = tabIcons[position]
+        }.attach()
+
+        updateDataRequest = JsonObjectRequest(
+            Request.Method.GET,
+            "$addressPrefix/groups/$id",
+            null,
+            { response ->
+                lights = response.getJSONArray("lights")
+                lampName = response.getString("name")
+                nameTxt.text = lampName
+                val action = response.getJSONObject("action")
+                val light = LightStates.Light()
+
+                if (action.has("bri")) {
+                    SliderUtils.setProgress(briBar, action.getInt("bri"))
+                } else {
+                    findViewById<TextView>(R.id.briTxt).visibility = View.GONE
+                    briBar.visibility = View.GONE
+                }
+                light.ct =
+                    if (action.has("ct")) {
+                        action.getInt("ct") - 153
+                    } else {
+                        -1
+                    }
+
+                if (action.has("hue") && action.has("sat")) {
+                    light.hue = action.getInt("hue")
+                    light.sat = action.getInt("sat")
+                } else {
+                    light.hue = -1
+                    light.sat = -1
+                }
+
+                light.on = response.getJSONObject("state").getBoolean("any_on")
+                briBar.isEnabled = light.on
+
+                lampData.state = light
+            },
+            {
+                canReceiveRequest = false
+                updateHandler.stop()
+                finish()
+            },
+        )
+        updateHandler.setUpdateFunction {
+            if (canReceiveRequest && hueAPI.readyForRequest) {
+                queue.add(updateDataRequest)
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        canReceiveRequest = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        canReceiveRequest = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        updateHandler.stop()
+    }
+
+    override fun onColorChanged(color: Int) {
+        ImageViewCompat.setImageTintList(
+            lampIcon,
+            ColorStateList.valueOf(color),
+        )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.activity_hue_lamp_actions, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_add_shortcut) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val shortcutManager = this.getSystemService(ShortcutManager::class.java)
+                if (shortcutManager != null) {
+                    if (shortcutManager.isRequestPinShortcutSupported) {
+                        val shortcut = ShortcutInfo.Builder(this, device.id + lampName)
+                            .setShortLabel(lampName)
+                            .setLongLabel(lampName)
+                            .setIcon(Icon.createWithResource(this, device.iconId))
+                            .setIntent(
+                                Intent(this, HueLampActivity::class.java)
+                                    .putExtra("id", id)
+                                    .putExtra("device", device.id)
+                                    .setAction(Intent.ACTION_MAIN)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
+                            )
+                            .build()
+                        shortcutManager.requestPinShortcut(shortcut, null)
+                    } else {
+                        Toast.makeText(this, R.string.pref_add_shortcut_failed, Toast.LENGTH_LONG).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, R.string.pref_add_shortcut_failed, Toast.LENGTH_LONG).show()
+            }
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+}
