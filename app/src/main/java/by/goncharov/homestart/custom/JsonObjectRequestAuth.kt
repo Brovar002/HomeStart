@@ -1,9 +1,9 @@
 package by.goncharov.homestart.custom
 
 import android.util.Base64
+import by.goncharov.homestart.helpers.DeviceSecrets
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import by.goncharov.homestart.helpers.DeviceSecrets
 import org.json.JSONObject
 
 class JsonObjectRequestAuth(
@@ -12,7 +12,7 @@ class JsonObjectRequestAuth(
     private val secrets: DeviceSecrets,
     jsonRequest: JSONObject?,
     listener: Response.Listener<JSONObject>,
-    errorListener: Response.ErrorListener
+    errorListener: Response.ErrorListener,
 ) : JsonObjectRequest(method, url, jsonRequest, listener, errorListener) {
 
     override fun getHeaders(): MutableMap<String, String> {

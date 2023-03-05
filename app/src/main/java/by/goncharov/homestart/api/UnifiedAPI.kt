@@ -13,7 +13,7 @@ import org.json.JSONObject
 open class UnifiedAPI(
     protected val c: Context,
     val deviceId: String,
-    protected val recyclerViewInterface: HomeRecyclerViewHelperInterface?
+    protected val recyclerViewInterface: HomeRecyclerViewHelperInterface?,
 ) {
 
     companion object {
@@ -24,7 +24,7 @@ open class UnifiedAPI(
     interface CallbackInterface {
         fun onItemsLoaded(
             holder: UnifiedRequestCallback,
-            recyclerViewInterface: HomeRecyclerViewHelperInterface?
+            recyclerViewInterface: HomeRecyclerViewHelperInterface?,
         )
 
         fun onExecuted(result: String, shouldRefresh: Boolean = false)
@@ -48,7 +48,7 @@ open class UnifiedAPI(
         if (System.currentTimeMillis() - (listCache[deviceId]?.first ?: 0) < LIST_REQUEST_TIMEOUT) {
             callback.onItemsLoaded(
                 UnifiedRequestCallback(listCache[deviceId]?.second, deviceId, ""),
-                recyclerViewInterface
+                recyclerViewInterface,
             )
             return
         }

@@ -15,7 +15,7 @@ class ShellyAPI(
     c: Context,
     deviceId: String,
     recyclerViewInterface: HomeRecyclerViewHelperInterface?,
-    private val version: Int
+    private val version: Int,
 ) : UnifiedAPI(c, deviceId, recyclerViewInterface) {
 
     private val secrets = DeviceSecrets(c, deviceId)
@@ -45,9 +45,9 @@ class ShellyAPI(
                                 callback.onItemsLoaded(
                                     UnifiedRequestCallback(
                                         listItems,
-                                        deviceId
+                                        deviceId,
                                     ),
-                                    recyclerViewInterface
+                                    recyclerViewInterface,
                                 )
                             },
                             { error ->
@@ -55,12 +55,12 @@ class ShellyAPI(
                                     UnifiedRequestCallback(
                                         null,
                                         deviceId,
-                                        Global.volleyError(c, error)
+                                        Global.volleyError(c, error),
                                     ),
-                                    null
+                                    null,
                                 )
-                            }
-                        )
+                            },
+                        ),
                     )
                 },
                 { error ->
@@ -68,11 +68,11 @@ class ShellyAPI(
                         UnifiedRequestCallback(
                             null,
                             deviceId,
-                            Global.volleyError(c, error)
+                            Global.volleyError(c, error),
                         ),
-                        null
+                        null,
                     )
-                }
+                },
             )
             2 -> JsonObjectRequest(
                 Request.Method.GET,
@@ -90,9 +90,9 @@ class ShellyAPI(
                                 callback.onItemsLoaded(
                                     UnifiedRequestCallback(
                                         listItems,
-                                        deviceId
+                                        deviceId,
                                     ),
-                                    recyclerViewInterface
+                                    recyclerViewInterface,
                                 )
                             },
                             { error ->
@@ -100,12 +100,12 @@ class ShellyAPI(
                                     UnifiedRequestCallback(
                                         null,
                                         deviceId,
-                                        Global.volleyError(c, error)
+                                        Global.volleyError(c, error),
                                     ),
-                                    null
+                                    null,
                                 )
-                            }
-                        )
+                            },
+                        ),
                     )
                 },
                 { error ->
@@ -113,11 +113,11 @@ class ShellyAPI(
                         UnifiedRequestCallback(
                             null,
                             deviceId,
-                            Global.volleyError(c, error)
+                            Global.volleyError(c, error),
                         ),
-                        null
+                        null,
                     )
-                }
+                },
             )
             else -> null
         }
@@ -142,14 +142,14 @@ class ShellyAPI(
                                 callback.onStatesLoaded(
                                     parser.parseStates(settingsResponse, statusResponse),
                                     offset,
-                                    dynamicSummaries
+                                    dynamicSummaries,
                                 )
                             },
-                            { }
-                        )
+                            { },
+                        ),
                     )
                 },
-                { }
+                { },
             )
             2 -> JsonObjectRequest(
                 Request.Method.GET,
@@ -165,14 +165,14 @@ class ShellyAPI(
                                 callback.onStatesLoaded(
                                     parser.parseStates(configResponse, statusResponse),
                                     offset,
-                                    dynamicSummaries
+                                    dynamicSummaries,
                                 )
                             },
-                            { }
-                        )
+                            { },
+                        ),
                     )
                 },
-                { }
+                { },
             )
             else -> null
         }
@@ -188,14 +188,14 @@ class ShellyAPI(
                 secrets,
                 null,
                 { },
-                { e -> Log.e(Global.LOG_TAG, e.toString()) }
+                { e -> Log.e(Global.LOG_TAG, e.toString()) },
             )
             2 -> JsonObjectRequest(
                 Request.Method.GET,
                 requestUrl,
                 null,
                 { },
-                { e -> Log.e(Global.LOG_TAG, e.toString()) }
+                { e -> Log.e(Global.LOG_TAG, e.toString()) },
             )
             else -> null
         }
@@ -212,7 +212,7 @@ class ShellyAPI(
                 { statusResponse ->
                     listener.onResponse(if (statusResponse.isNull("name")) "" else statusResponse.optString("name"))
                 },
-                {}
+                {},
             )
         }
     }

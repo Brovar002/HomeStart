@@ -13,7 +13,7 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <item name="colorSurface">@color/colorPrimary</item>
-        <item name="dividerColor">@color/dividerLight</item>
+        <item name="dividerColorValue">@color/dividerLight</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
@@ -26,9 +26,9 @@
     <style name="AppThemeDark" parent="Theme.MaterialComponents">
         <item name="colorSurface">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="dividerColor">@color/dividerDark</item>
+        <item name="dividerColorValue">@color/dividerDark</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="31">false</item>
     </style>
 
     <style name="AppThemeDark.NoActionBar" parent="AppThemeDark">

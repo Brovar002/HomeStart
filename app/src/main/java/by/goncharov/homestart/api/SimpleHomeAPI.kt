@@ -18,7 +18,7 @@ import java.net.URLEncoder
 class SimpleHomeAPI(
     c: Context,
     deviceId: String,
-    recyclerViewInterface: HomeRecyclerViewHelperInterface?
+    recyclerViewInterface: HomeRecyclerViewHelperInterface?,
 ) : UnifiedAPI(c, deviceId, recyclerViewInterface) {
 
     private val parser = SimpleHomeAPIParser(c.resources, this)
@@ -38,14 +38,14 @@ class SimpleHomeAPI(
                 callback.onItemsLoaded(
                     UnifiedRequestCallback(
                         listItems,
-                        deviceId
+                        deviceId,
                     ),
-                    recyclerViewInterface
+                    recyclerViewInterface,
                 )
             },
             { error ->
                 callback.onItemsLoaded(UnifiedRequestCallback(null, deviceId, volleyError(c, error)), null)
-            }
+            },
         )
         queue.add(jsonObjectRequest)
     }
@@ -59,10 +59,10 @@ class SimpleHomeAPI(
                 callback.onStatesLoaded(
                     parser.parseStates(infoResponse),
                     offset,
-                    dynamicSummaries
+                    dynamicSummaries,
                 )
             },
-            { }
+            { },
         )
         queue.add(jsonObjectRequest)
     }
@@ -85,7 +85,7 @@ class SimpleHomeAPI(
                             url + realPath + "?input=" + URLEncoder.encode(input.text.toString(), "utf-8"),
                             null,
                             { },
-                            { e -> Log.e(Global.LOG_TAG, e.toString()) }
+                            { e -> Log.e(Global.LOG_TAG, e.toString()) },
                         )
                         queue.add(jsonObjectRequest)
                     }
@@ -100,12 +100,12 @@ class SimpleHomeAPI(
                     { response ->
                         callback.onExecuted(
                             response.optString("toast", c.resources.getString(R.string.main_execution_completed)),
-                            response.optBoolean("refresh", false)
+                            response.optBoolean("refresh", false),
                         )
                     },
                     { error ->
                         callback.onExecuted(volleyError(c, error))
-                    }
+                    },
                 )
                 queue.add(jsonObjectRequest)
             }
@@ -118,7 +118,7 @@ class SimpleHomeAPI(
             url + id.substring(id.lastIndexOf('@') + 1) + "?input=" + (if (state) 1 else 0),
             null,
             { },
-            { e -> Log.e(Global.LOG_TAG, e.toString()) }
+            { e -> Log.e(Global.LOG_TAG, e.toString()) },
         )
         queue.add(jsonObjectRequest)
     }

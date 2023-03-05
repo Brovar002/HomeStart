@@ -2,6 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
+
+    <queries>
+        <package android:name="com.philips.lighting.hue2" />
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,6 +25,128 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppThemeDark"
-        tools:targetApi="31" />
+        tools:targetApi="31"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        <activity
+            android:name=".activities.HueSceneActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/about"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.SettingsActivity" />
+        <activity
+            android:name=".activities.SearchDevicesActivity"
+            android:label="@string/pref_add"
+            android:parentActivityName=".activities.DevicesActivity" />
+        <activity
+            android:name=".activities.HueConnectActivity"
+            android:theme="@style/AppThemeDark.NoActionBar" />
+        <activity
+            android:name=".activities.HueLampActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.SplashActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeSplash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/AppThemeDark.NoActionBar" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/pref"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.WebActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/webView"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.DevicesActivity"
+            android:label="@string/pref"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.SettingsActivity" />
+        <activity
+            android:name=".activities.EditDeviceActivity"
+            android:label="@string/pref_add"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.DevicesActivity" />
+        <activity
+            android:name=".activities.DeviceInfoActivity"
+            android:label="@string/device_config_info"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.EditDeviceActivity" />
+        <activity
+            android:name=".activities.ShortcutDeviceActivity"
+            android:exported="true"
+            android:label="@string/pref_add_name_empty">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ShortcutHueRoomActivity"
+            android:exported="true"
+            android:label="@string/hue_room">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ShortcutHueSceneActivity"
+            android:exported="true"
+            android:label="@string/hue_scene_shortcut">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ShortcutHueSceneActionActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
+        <activity
+            android:name=".activities.ShortcutTasmotaActivity"
+            android:exported="true"
+            android:label="@string/tasmota">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ShortcutTasmotaActionActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <service
+            android:name=".services.ControlService"
+            android:exported="true"
+            android:permission="android.permission.BIND_CONTROLS">
+            <intent-filter>
+                <action android:name="android.service.controls.ControlsProviderService" />
+            </intent-filter>
+        </service>
+    </application>
+
 
 </manifest>

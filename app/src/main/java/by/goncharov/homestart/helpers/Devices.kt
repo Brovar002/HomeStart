@@ -27,7 +27,7 @@ class Devices(private val context: Context) {
             storedData = try {
                 JSONObject(
                     _prefs.getString("devices_json", Global.DEFAULT_JSON)
-                        ?: Global.DEFAULT_JSON
+                        ?: Global.DEFAULT_JSON,
                 )
             } catch (e: JSONException) {
                 JSONObject(Global.DEFAULT_JSON)

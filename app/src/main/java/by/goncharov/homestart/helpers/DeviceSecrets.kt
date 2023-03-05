@@ -21,12 +21,12 @@ class DeviceSecrets(context: Context, private val id: String) {
         "device_secrets",
         masterKeyAlias,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
     )
 
     private val secrets = JSONObject(
         _prefs.getString(id, DEFAULT_JSON)
-            ?: DEFAULT_JSON
+            ?: DEFAULT_JSON,
     )
 
     fun updateDeviceSecrets() {

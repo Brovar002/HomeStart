@@ -61,7 +61,7 @@ class EspEasyAPIParser(resources: Resources, api: UnifiedAPI?) : UnifiedAPI.Pars
                 listItems += ListViewItem(
                     title = currentValue + suffix,
                     summary = taskName + ": " + currentTask.getString("Name"),
-                    icon = taskIcons[taskId]
+                    icon = taskIcons[taskId],
                 )
             }
         }
@@ -82,12 +82,15 @@ class EspEasyAPIParser(resources: Resources, api: UnifiedAPI?) : UnifiedAPI.Pars
                 listItems += ListViewItem(
                     title = taskName,
                     summary = resources.getString(
-                        if (currentState) R.string.switch_summary_on
-                        else R.string.switch_summary_off
+                        if (currentState) {
+                            R.string.switch_summary_on
+                        } else {
+                            R.string.switch_summary_off
+                        },
                     ),
                     hidden = gpioId,
                     state = currentState,
-                    icon = R.drawable.ic_do
+                    icon = R.drawable.ic_do,
                 )
                 api?.needsRealTimeData = true
             }
@@ -130,7 +133,9 @@ class EspEasyAPIParser(resources: Resources, api: UnifiedAPI?) : UnifiedAPI.Pars
                     .getJSONObject(taskId)
                     .getString("Value")
                     .equals("nan")
-            ) listItems += null
+            ) {
+                listItems += null
+            }
         }
     }
 

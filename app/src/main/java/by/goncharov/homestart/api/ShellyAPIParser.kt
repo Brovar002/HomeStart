@@ -11,10 +11,14 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
     UnifiedAPI.Parser(resources) {
 
     fun parseResponse(config: JSONObject, status: JSONObject): ArrayList<ListViewItem> {
-        return if (version == 1) parseResponseV1(config, status) else parseResponseV2(
-            config,
-            status
-        )
+        return if (version == 1) {
+            parseResponseV1(config, status)
+        } else {
+            parseResponseV2(
+                config,
+                status,
+            )
+        }
     }
 
     private fun parseResponseV1(settings: JSONObject, status: JSONObject): ArrayList<ListViewItem> {
@@ -32,15 +36,18 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
             listItems += ListViewItem(
                 title = nameOrDefault(
                     if (currentRelay.isNull("name")) "" else currentRelay.optString("name"),
-                    relayId
+                    relayId,
                 ),
                 summary = resources.getString(
-                    if (currentState) R.string.switch_summary_on
-                    else R.string.switch_summary_off
+                    if (currentState) {
+                        R.string.switch_summary_on
+                    } else {
+                        R.string.switch_summary_off
+                    },
                 ),
                 hidden = relayId.toString(),
                 state = currentState,
-                icon = Global.getIcon(currentRelay.optString("appliance_type"), R.drawable.ic_do)
+                icon = Global.getIcon(currentRelay.optString("appliance_type"), R.drawable.ic_do),
             )
             // Shelly1 has the "user power constant" setting, but no actual meter
             hideMeters = currentRelay.has("power")
@@ -54,7 +61,7 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
             listItems += ListViewItem(
                 title = "${currentMeter.getDouble("power")} W",
                 summary = resources.getString(R.string.shelly_powermeter_summary),
-                icon = R.drawable.ic_device_electricity
+                icon = R.drawable.ic_device_electricity,
             )
         }
 
@@ -65,7 +72,7 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
             listItems += ListViewItem(
                 title = "${currentSensor.getDouble("tC")} °C",
                 summary = resources.getString(R.string.shelly_temperature_sensor_summary),
-                icon = R.drawable.ic_device_thermometer
+                icon = R.drawable.ic_device_thermometer,
             )
         }
 
@@ -76,7 +83,7 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
             listItems += ListViewItem(
                 title = "${currentSensor.getDouble("hum")}%",
                 summary = resources.getString(R.string.shelly_humidity_sensor_summary),
-                icon = R.drawable.ic_device_hygrometer
+                icon = R.drawable.ic_device_hygrometer,
             )
         }
 
@@ -96,19 +103,22 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
             listItems += ListViewItem(
                 title = nameOrDefault(
                     if (properties.isNull("name")) "" else properties.getString("name"),
-                    currentId
+                    currentId,
                 ),
                 summary = resources.getString(
-                    if (currentState) R.string.switch_summary_on
-                    else R.string.switch_summary_off
+                    if (currentState) {
+                        R.string.switch_summary_on
+                    } else {
+                        R.string.switch_summary_off
+                    },
                 ),
                 hidden = currentId.toString(),
                 state = currentState,
                 icon = Global.getIcon(
                     config.optJSONObject("sys")?.optJSONObject("ui_data")
                         ?.optJSONArray("consumption_types")?.getString(currentId) ?: "",
-                    R.drawable.ic_do
-                )
+                    R.drawable.ic_do,
+                ),
             )
         }
         return listItems
@@ -163,7 +173,10 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
     }
 
     private fun nameOrDefault(name: String, id: Int): String {
-        return if (name.trim().isEmpty()) resources.getString(R.string.shelly_switch_title, id + 1)
-        else name
+        return if (name.trim().isEmpty()) {
+            resources.getString(R.string.shelly_switch_title, id + 1)
+        } else {
+            name
+        }
     }
 }

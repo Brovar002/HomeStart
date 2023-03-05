@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/dialog_item_margin"
-                android:background="?attr/dividerColor" />
+                android:background="?attr/dividerColorValue" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                 android:id="@+id/specialDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/dividerColor" />
+                android:background="?attr/dividerColorValue" />
 
             <LinearLayout
                 android:id="@+id/specialSection"
@@ -169,7 +169,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/dividerColor" />
+                android:background="?attr/dividerColorValue" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,7 +195,7 @@
                 android:id="@+id/editDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/dividerColor" />
+                android:background="?attr/dividerColorValue" />
 
             <LinearLayout
                 android:id="@+id/editSection"

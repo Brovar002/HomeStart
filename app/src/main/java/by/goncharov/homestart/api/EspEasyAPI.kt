@@ -11,7 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 class EspEasyAPI(
     c: Context,
     deviceId: String,
-    recyclerViewInterface: HomeRecyclerViewHelperInterface?
+    recyclerViewInterface: HomeRecyclerViewHelperInterface?,
 ) : UnifiedAPI(c, deviceId, recyclerViewInterface) {
 
     private val parser = EspEasyAPIParser(c.resources, this)
@@ -28,9 +28,9 @@ class EspEasyAPI(
                 callback.onItemsLoaded(
                     UnifiedRequestCallback(
                         listItems,
-                        deviceId
+                        deviceId,
                     ),
-                    recyclerViewInterface
+                    recyclerViewInterface,
                 )
             },
             { error ->
@@ -38,11 +38,11 @@ class EspEasyAPI(
                     UnifiedRequestCallback(
                         null,
                         deviceId,
-                        Global.volleyError(c, error)
+                        Global.volleyError(c, error),
                     ),
-                    null
+                    null,
                 )
-            }
+            },
         )
         queue.add(jsonObjectRequest)
     }
@@ -56,10 +56,10 @@ class EspEasyAPI(
                 callback.onStatesLoaded(
                     parser.parseStates(infoResponse),
                     offset,
-                    dynamicSummaries
+                    dynamicSummaries,
                 )
             },
-            { }
+            { },
         )
         queue.add(jsonObjectRequest)
     }
@@ -69,7 +69,7 @@ class EspEasyAPI(
         val jsonObjectRequest = JsonObjectRequest(
             switchUrl,
             { },
-            { e -> Log.e(Global.LOG_TAG, e.toString()) }
+            { e -> Log.e(Global.LOG_TAG, e.toString()) },
         )
         queue.add(jsonObjectRequest)
     }

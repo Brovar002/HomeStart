@@ -40,8 +40,8 @@ class TasmotaHelper(private val c: Context, private val tasmota: UnifiedAPI) {
                     array.put(
                         JSONObject()
                             .put("title", if (newTitle == "") c.resources.getString(R.string.tasmota_add_command_dialog_title_empty) else newTitle)
-                            .put("command", if (newCommand == "") c.resources.getString(R.string.tasmota_add_command_dialog_command_empty) else newCommand)
-                    ).toString()
+                            .put("command", if (newCommand == "") c.resources.getString(R.string.tasmota_add_command_dialog_command_empty) else newCommand),
+                    ).toString(),
                 ).apply()
                 tasmota.loadList(callback)
             }
@@ -64,12 +64,12 @@ class TasmotaHelper(private val c: Context, private val tasmota: UnifiedAPI) {
                 prefs.edit().putString(
                     tasmota.deviceId,
                     JSONArray(
-                        prefs.getString(tasmota.deviceId, EMPTY_ARRAY)
+                        prefs.getString(tasmota.deviceId, EMPTY_ARRAY),
                     ).put(
                         JSONObject()
                             .put("title", if (newTitle == "") c.resources.getString(R.string.tasmota_add_command_dialog_title_empty) else newTitle)
-                            .put("command", if (newCommand == "") c.resources.getString(R.string.tasmota_add_command_dialog_command_empty) else newCommand)
-                    ).toString()
+                            .put("command", if (newCommand == "") c.resources.getString(R.string.tasmota_add_command_dialog_command_empty) else newCommand),
+                    ).toString(),
                 ).apply()
                 tasmota.loadList(callback)
             }

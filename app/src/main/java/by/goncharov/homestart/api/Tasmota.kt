@@ -19,7 +19,7 @@ import org.json.JSONObject
 class Tasmota(
     c: Context,
     deviceId: String,
-    recyclerViewInterface: HomeRecyclerViewHelperInterface?
+    recyclerViewInterface: HomeRecyclerViewHelperInterface?,
 ) : UnifiedAPI(c, deviceId, recyclerViewInterface) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(c)
@@ -32,7 +32,7 @@ class Tasmota(
             listItems += ListViewItem(
                 title = c.resources.getString(R.string.tasmota_empty_list),
                 summary = c.resources.getString(R.string.tasmota_empty_list_summary),
-                icon = R.drawable.ic_warning
+                icon = R.drawable.ic_warning,
             )
         } else {
             var currentItem: JSONObject
@@ -43,7 +43,7 @@ class Tasmota(
                         title = currentItem.optString("title"),
                         summary = currentItem.optString("command"),
                         hidden = "tasmota_command#$i",
-                        icon = R.drawable.ic_do
+                        icon = R.drawable.ic_do,
                     )
                 } catch (e: JSONException) {
                     Log.e(Global.LOG_TAG, e.toString())
@@ -56,14 +56,14 @@ class Tasmota(
                 title = c.resources.getString(R.string.tasmota_add_command),
                 summary = c.resources.getString(R.string.tasmota_add_command_summary),
                 icon = R.drawable.ic_add,
-                hidden = "add"
+                hidden = "add",
             )
 
             listItems += ListViewItem(
                 title = c.resources.getString(R.string.tasmota_execute_once),
                 summary = c.resources.getString(R.string.tasmota_execute_once_summary),
                 icon = R.drawable.ic_edit,
-                hidden = "execute_once"
+                hidden = "execute_once",
             )
         }
 
@@ -80,7 +80,7 @@ class Tasmota(
             },
             { error ->
                 Toast.makeText(c, Global.volleyError(c, error), Toast.LENGTH_LONG).show()
-            }
+            },
         )
         queue.add(request)
     }
