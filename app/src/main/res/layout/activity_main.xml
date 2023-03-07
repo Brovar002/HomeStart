@@ -51,13 +51,4 @@
         app:srcCompat="@drawable/ic_edit"
         tools:ignore="ImageContrastCheck" />
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_gravity="bottom"
-        android:contentDescription="@string/sign_in"
-        android:text="Button" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

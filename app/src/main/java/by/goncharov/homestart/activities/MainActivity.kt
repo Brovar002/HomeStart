@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageSwitcher
@@ -63,7 +62,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var deviceIcon: ImageSwitcher
     private lateinit var deviceName: TextSwitcher
     private lateinit var fab: FloatingActionButton
-    private lateinit var login: Button
 
     private var themeId = ""
     private fun getThemeId(): String =
@@ -254,7 +252,6 @@ class MainActivity : AppCompatActivity() {
         deviceIcon = findViewById(R.id.deviceIcon)
         deviceName = findViewById(R.id.deviceName)
         fab = findViewById(R.id.fab)
-        login = findViewById(R.id.login)
         themeId = getThemeId()
         columns = getColumns()
 
@@ -295,10 +292,6 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
             startActivityAndReset(Intent(this, DevicesActivity::class.java))
-        }
-
-        login.setOnClickListener {
-            startActivityAndReset(Intent(this, LoginActivity::class.java))
         }
 
         findViewById<ImageButton>(R.id.menu_icon).setOnClickListener {

@@ -128,6 +128,8 @@
     <string name="pref_safety_checks_summary">Perform basic security checks\nWarning: Turning this off can leak connection data to attackers\!</string>
     <string name="pref_info">Information</string>
     <string name="pref_device_router">Router</string>
+    <string name="pref_profile">Profile</string>
+    <string name="pref_profile_id">User ID: %s</string>
     <string name="placeholder">Loading</string>
 
     <string name="security_username">Username</string>
@@ -240,4 +242,13 @@
         <item>Tasmota</item>
         <item>Website</item>
     </string-array>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>
