@@ -1,6 +1,9 @@
 package by.goncharov.homestart.auth
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -8,30 +11,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import by.goncharov.homestart.R
-import by.goncharov.homestart.databinding.FragmentEmailpasswordBinding
+import by.goncharov.homestart.activities.MainActivity
+import by.goncharov.homestart.databinding.FragmentLoginBinding
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class EmailPasswordFragment : BaseFragment() {
+class LoginFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var signInClient: SignInClient
 
-    private var _binding: FragmentEmailpasswordBinding? = null
-    private val binding: FragmentEmailpasswordBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding: FragmentLoginBinding
         get() = _binding!!
+    private val signInLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        handleSignInResult(result.data)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentEmailpasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setProgressBar(binding.progressBar)
 
         // Buttons
         with(binding) {
@@ -45,13 +61,16 @@ class EmailPasswordFragment : BaseFragment() {
                 val password = binding.fieldPassword.text.toString()
                 createAccount(email, password)
             }
-            signOutButton.setOnClickListener { signOut() }
-            verifyEmailButton.setOnClickListener { sendEmailVerification() }
-            reloadButton.setOnClickListener { reload() }
+            binding.signInButton.setOnClickListener { googleSignIn() }
         }
-
+        signInClient = Identity.getSignInClient(requireContext())
         // Initialize Firebase Auth
         auth = Firebase.auth
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            oneTapSignIn()
+        }
     }
 
     public override fun onStart() {
@@ -68,15 +87,18 @@ class EmailPasswordFragment : BaseFragment() {
         if (!validateForm()) {
             return
         }
-
-        showProgressBar()
-
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
+                sendEmailVerification()
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
+                    Toast.makeText(
+                        context,
+                        "Verify email",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -88,8 +110,6 @@ class EmailPasswordFragment : BaseFragment() {
                     ).show()
                     updateUI(null)
                 }
-
-                hideProgressBar()
             }
     }
 
@@ -98,8 +118,6 @@ class EmailPasswordFragment : BaseFragment() {
         if (!validateForm()) {
             return
         }
-
-        showProgressBar()
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
@@ -118,30 +136,98 @@ class EmailPasswordFragment : BaseFragment() {
                     ).show()
                     updateUI(null)
                 }
-
-                if (!task.isSuccessful) {
-                    binding.status.setText(R.string.auth_failed)
-                }
-                hideProgressBar()
             }
     }
 
-    private fun signOut() {
-        auth.signOut()
-        updateUI(null)
+    private fun handleSignInResult(data: Intent?) {
+        // Result returned from launching the Sign In PendingIntent
+        try {
+            // Google Sign In was successful, authenticate with Firebase
+            val credential = signInClient.getSignInCredentialFromIntent(data)
+            val idToken = credential.googleIdToken
+            if (idToken != null) {
+                Log.d(TAG_FIREBASE, "firebaseAuthWithGoogle: ${credential.id}")
+                firebaseAuthWithGoogle(idToken)
+            } else {
+                // Shouldn't happen.
+                Log.d(TAG_FIREBASE, "No ID token!")
+            }
+        } catch (e: ApiException) {
+            // Google Sign In failed, update UI appropriately
+            Log.w(TAG_FIREBASE, "Google sign in failed", e)
+            updateUI(null)
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG_FIREBASE, "signInWithCredential:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG_FIREBASE, "signInWithCredential:failure", task.exception)
+                    val view = binding.mainLayout
+                    Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
+            }
+    }
+
+    private fun oneTapSignIn() {
+        // Configure One Tap UI
+        val oneTapRequest = BeginSignInRequest.builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setServerClientId(getString(R.string.default_web_client_id))
+                    .setFilterByAuthorizedAccounts(true)
+                    .build(),
+            )
+            .build()
+
+        // Display the One Tap UI
+        signInClient.beginSignIn(oneTapRequest)
+            .addOnSuccessListener { result ->
+                launchSignIn(result.pendingIntent)
+            }
+            .addOnFailureListener { e ->
+                // No saved credentials found. Launch the One Tap sign-up flow, or
+                // do nothing and continue presenting the signed-out UI.
+            }
+    }
+    private fun googleSignIn() {
+        val signInRequest = GetSignInIntentRequest.builder()
+            .setServerClientId(getString(R.string.default_web_client_id))
+            .build()
+
+        signInClient.getSignInIntent(signInRequest)
+            .addOnSuccessListener { pendingIntent ->
+                launchSignIn(pendingIntent)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG_FIREBASE, "Google Sign-in failed", e)
+            }
+    }
+
+    private fun launchSignIn(pendingIntent: PendingIntent) {
+        try {
+            val intentSenderRequest = IntentSenderRequest.Builder(pendingIntent)
+                .build()
+            signInLauncher.launch(intentSenderRequest)
+        } catch (e: IntentSender.SendIntentException) {
+            Log.e(TAG_FIREBASE, "Couldn't start Sign In: ${e.localizedMessage}")
+        }
     }
 
     private fun sendEmailVerification() {
-        // Disable button
-        binding.verifyEmailButton.isEnabled = false
-
-        // Send verification email
         val user = auth.currentUser!!
         user.sendEmailVerification()
             .addOnCompleteListener(requireActivity()) { task ->
-                // Re-enable button
-                binding.verifyEmailButton.isEnabled = true
-
                 if (task.isSuccessful) {
                     Toast.makeText(
                         context,
@@ -195,31 +281,25 @@ class EmailPasswordFragment : BaseFragment() {
 
     @SuppressLint("StringFormatMatches")
     private fun updateUI(user: FirebaseUser?) {
-        hideProgressBar()
         if (user != null) {
-            binding.status.text = getString(
-                R.string.emailpassword_status_fmt,
-                user.email,
-                user.isEmailVerified,
-            )
-            binding.detail.text = getString(R.string.firebase_status_fmt, user.uid)
-
             binding.emailPasswordButtons.visibility = View.GONE
             binding.emailPasswordFields.visibility = View.GONE
+            binding.signInButton.visibility = View.GONE
             binding.signedInButtons.visibility = View.VISIBLE
 
             if (user.isEmailVerified) {
-                binding.verifyEmailButton.visibility = View.GONE
+                startActivity(
+                    Intent(context, MainActivity::class.java).putExtra(
+                        "user",
+                        user,
+                    ),
+                )
             } else {
-                binding.verifyEmailButton.visibility = View.VISIBLE
+                binding.emailPasswordButtons.visibility = View.VISIBLE
+                binding.emailPasswordFields.visibility = View.VISIBLE
+                binding.signInButton.visibility = View.VISIBLE
+                binding.signedInButtons.visibility = View.GONE
             }
-        } else {
-            binding.status.setText(R.string.signed_out)
-            binding.detail.text = null
-
-            binding.emailPasswordButtons.visibility = View.VISIBLE
-            binding.emailPasswordFields.visibility = View.VISIBLE
-            binding.signedInButtons.visibility = View.GONE
         }
     }
 
@@ -230,6 +310,7 @@ class EmailPasswordFragment : BaseFragment() {
 
     companion object {
         private const val TAG = "EmailPassword"
+        private const val TAG_FIREBASE = "GoogleFragmentKt"
         private const val RC_MULTI_FACTOR = 9005
     }
 }
