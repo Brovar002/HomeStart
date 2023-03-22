@@ -3,6 +3,7 @@ package by.goncharov.homestart.fragments
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,10 @@ class HueLampsFragment :
     Fragment(R.layout.fragment_hue_lamps),
     RecyclerViewHelperInterface,
     HueAdvancedLampInterface {
+
+    companion object {
+        const val TAG: String = "Hue Lamp Fragment"
+    }
 
     private lateinit var c: Context
     private lateinit var lampData: HueRoomInterface
@@ -133,8 +138,16 @@ class HueLampsFragment :
         )
     }
 
-    override fun onColorChanged(color: Int) {}
-    override fun onBrightnessChanged(brightness: Int) {}
-    override fun onHueSatChanged(hue: Int, sat: Int) {}
-    override fun onCtChanged(ct: Int) {}
+    override fun onColorChanged(color: Int) {
+        Log.d(TAG, "Empty onColorChanged")
+    }
+    override fun onBrightnessChanged(brightness: Int) {
+        Log.d(TAG, "Empty onBrightnessChanged")
+    }
+    override fun onHueSatChanged(hue: Int, sat: Int) {
+        Log.d(TAG, "Empty onHueSatChanged")
+    }
+    override fun onCtChanged(ct: Int) {
+        Log.d(TAG, "Empty onCtChanged")
+    }
 }

@@ -42,7 +42,7 @@ class SettingsActivity : AppCompatActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             auth = Firebase.auth
-            val currentUser = auth.currentUser
+            auth.currentUser
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(
                 prefsChangedListener,
             )

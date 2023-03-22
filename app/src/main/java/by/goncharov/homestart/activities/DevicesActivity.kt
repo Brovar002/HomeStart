@@ -2,6 +2,7 @@ package by.goncharov.homestart.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -63,6 +64,7 @@ class DevicesActivity : AppCompatActivity(), RecyclerViewHelperInterfaceAdvanced
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            Log.d("DevicesActivity", "EmptyOnSwiped")
         }
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {

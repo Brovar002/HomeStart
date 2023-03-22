@@ -45,8 +45,6 @@ class HueColorSheet(private val lampInterface: HueAdvancedLampInterface) : Botto
         val ctViews = arrayOf<View>(ctText, ctBar)
         val hueSatViews = arrayOf<View>(colorPickerView, hueSatText, hueBar, satBar)
         val briViews = arrayOf<View>(briText, briBar)
-
-        // Load colors
         Volley.newRequestQueue(c)
             .add(
                 JsonObjectRequest(
@@ -102,8 +100,6 @@ class HueColorSheet(private val lampInterface: HueAdvancedLampInterface) : Botto
                     },
                 ),
             )
-
-        // Slider labels
         ctBar.setLabelFormatter { value: Float ->
             HueUtils.ctToKelvin(value.toInt() + 153)
         }

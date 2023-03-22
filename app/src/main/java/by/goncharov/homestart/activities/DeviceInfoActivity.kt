@@ -1,6 +1,7 @@
 package by.goncharov.homestart.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,7 +54,9 @@ class DeviceInfoActivity : AppCompatActivity(), RecyclerViewHelperInterface {
         }
     }
 
-    override fun onItemClicked(view: View, position: Int) {}
+    override fun onItemClicked(view: View, position: Int) {
+        Log.d("DeviceInfo", "emptyOnItemClicked")
+    }
 
     private fun boolToString(bool: Boolean): String {
         return resources.getString(if (bool) R.string.str_on else R.string.str_off)

@@ -27,6 +27,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SearchDevicesActivity : AppCompatActivity(), RecyclerViewHelperInterface {
+    companion object {
+        const val TAG: String = "Search Devices Activity"
+    }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DeviceDiscoveryListAdapter
@@ -61,12 +64,10 @@ class SearchDevicesActivity : AppCompatActivity(), RecyclerViewHelperInterface {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        // Device variables
         val manager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val routerIp = intToIp(manager.dhcpInfo.gateway)
 
         Thread {
-            // Add Router
             adapter.add(
                 ListViewItem(
                     title = resources.getString(R.string.pref_device_router),
@@ -78,11 +79,12 @@ class SearchDevicesActivity : AppCompatActivity(), RecyclerViewHelperInterface {
             )
             addresses += routerIp
 
-            // Get compatible devices
             UPnPDiscovery.discoveryDevices(
                 this,
                 object : UPnPDiscovery.OnDiscoveryListener {
-                    override fun onStart() {}
+                    override fun onStart() {
+                        Log.d(TAG, "Empty onStart")
+                    }
                     override fun onFoundNewDevice(device: UPnPDevice) {
                         if (device.server.contains("IpBridge") && !addresses.contains(device.hostAddress)) {
                             adapter.add(
@@ -206,8 +208,12 @@ class SearchDevicesActivity : AppCompatActivity(), RecyclerViewHelperInterface {
                 }
             }
 
-            override fun onDiscoveryStarted(p0: String?) { }
-            override fun onDiscoveryStopped(p0: String?) { }
+            override fun onDiscoveryStarted(p0: String?) {
+                Log.d(TAG, "Empty onDiscoveryStarted")
+            }
+            override fun onDiscoveryStopped(p0: String?) {
+                Log.d(TAG, "Empty onDiscoveryStopped")
+            }
         }
 
         discoveryListenerHttp = DnsDiscoveryListener()

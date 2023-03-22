@@ -1,4 +1,4 @@
-package by.goncharov.homestart.auth
+package by.goncharov.homestart.fragments
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -41,15 +41,13 @@ class LoginFragment : Fragment() {
         handleSignInResult(result.data)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Buttons
         with(binding) {
             emailSignInButton.setOnClickListener {
                 val email = binding.fieldEmail.text.toString()
@@ -64,7 +62,6 @@ class LoginFragment : Fragment() {
             binding.signInButton.setOnClickListener { googleSignIn() }
         }
         signInClient = Identity.getSignInClient(requireContext())
-        // Initialize Firebase Auth
         auth = Firebase.auth
 
         val currentUser = auth.currentUser
@@ -73,9 +70,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
             reload()
@@ -91,7 +87,6 @@ class LoginFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) { task ->
                 sendEmailVerification()
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
                     Toast.makeText(
@@ -101,7 +96,6 @@ class LoginFragment : Fragment() {
                     ).show()
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     Toast.makeText(
                         context,
@@ -122,12 +116,10 @@ class LoginFragment : Fragment() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
                         context,
@@ -140,20 +132,16 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleSignInResult(data: Intent?) {
-        // Result returned from launching the Sign In PendingIntent
         try {
-            // Google Sign In was successful, authenticate with Firebase
             val credential = signInClient.getSignInCredentialFromIntent(data)
             val idToken = credential.googleIdToken
             if (idToken != null) {
                 Log.d(TAG_FIREBASE, "firebaseAuthWithGoogle: ${credential.id}")
                 firebaseAuthWithGoogle(idToken)
             } else {
-                // Shouldn't happen.
                 Log.d(TAG_FIREBASE, "No ID token!")
             }
         } catch (e: ApiException) {
-            // Google Sign In failed, update UI appropriately
             Log.w(TAG_FIREBASE, "Google sign in failed", e)
             updateUI(null)
         }
@@ -164,12 +152,10 @@ class LoginFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG_FIREBASE, "signInWithCredential:success")
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG_FIREBASE, "signInWithCredential:failure", task.exception)
                     val view = binding.mainLayout
                     Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
@@ -179,7 +165,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun oneTapSignIn() {
-        // Configure One Tap UI
         val oneTapRequest = BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
@@ -189,15 +174,11 @@ class LoginFragment : Fragment() {
                     .build(),
             )
             .build()
-
-        // Display the One Tap UI
         signInClient.beginSignIn(oneTapRequest)
             .addOnSuccessListener { result ->
                 launchSignIn(result.pendingIntent)
             }
-            .addOnFailureListener { e ->
-                // No saved credentials found. Launch the One Tap sign-up flow, or
-                // do nothing and continue presenting the signed-out UI.
+            .addOnFailureListener {
             }
     }
     private fun googleSignIn() {
@@ -311,6 +292,5 @@ class LoginFragment : Fragment() {
     companion object {
         private const val TAG = "EmailPassword"
         private const val TAG_FIREBASE = "GoogleFragmentKt"
-        private const val RC_MULTI_FACTOR = 9005
     }
 }

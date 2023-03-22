@@ -23,8 +23,6 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
 
     private fun parseResponseV1(settings: JSONObject, status: JSONObject): ArrayList<ListViewItem> {
         val listItems = arrayListOf<ListViewItem>()
-
-        // switches
         val relays = settings.optJSONArray("relays") ?: JSONArray()
         var currentRelay: JSONObject
         var currentState: Boolean
@@ -49,11 +47,8 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
                 state = currentState,
                 icon = Global.getIcon(currentRelay.optString("appliance_type"), R.drawable.ic_do),
             )
-            // Shelly1 has the "user power constant" setting, but no actual meter
             hideMeters = currentRelay.has("power")
         }
-
-        // power meters
         val meters = if (hideMeters) JSONArray() else status.optJSONArray("meters") ?: JSONArray()
         var currentMeter: JSONObject
         for (meterId in 0 until meters.length()) {
@@ -64,8 +59,6 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
                 icon = R.drawable.ic_device_electricity,
             )
         }
-
-        // external temperature sensors
         val tempSensors = status.optJSONObject("ext_temperature") ?: JSONObject()
         for (sensorId in tempSensors.keys()) {
             val currentSensor = tempSensors.getJSONObject(sensorId)
@@ -75,8 +68,6 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
                 icon = R.drawable.ic_device_thermometer,
             )
         }
-
-        // external humidity sensors
         val humSensors = status.optJSONObject("ext_humidity") ?: JSONObject()
         for (sensorId in humSensors.keys()) {
             val currentSensor = humSensors.getJSONObject(sensorId)
@@ -130,31 +121,22 @@ class ShellyAPIParser(resources: Resources, private val version: Int) :
 
     private fun parseStatesV1(settings: JSONObject, status: JSONObject): ArrayList<Boolean?> {
         val listItems = arrayListOf<Boolean?>()
-
-        // switches
         val relays = settings.optJSONArray("relays") ?: JSONArray()
         var currentRelay: JSONObject
         var hideMeters = false
         for (relayId in 0 until relays.length()) {
             currentRelay = relays.getJSONObject(relayId)
             listItems += currentRelay.getBoolean("ison")
-            // Shelly1 has the "user power constant" setting, but no actual meter
             hideMeters = currentRelay.has("power")
         }
-
-        // power meters
         val meters = if (hideMeters) JSONArray() else status.optJSONArray("meters") ?: JSONArray()
         for (meterId in 0 until meters.length()) {
             listItems += null
         }
-
-        // external temperature sensors
         val tempSensors = status.optJSONObject("ext_temperature") ?: JSONObject()
         for (sensorId in tempSensors.keys()) {
             listItems += null
         }
-
-        // external humidity sensors
         val humSensors = status.optJSONObject("ext_humidity") ?: JSONObject()
         for (sensorId in humSensors.keys()) {
             listItems += null

@@ -54,8 +54,6 @@ class HueColorFragment : Fragment(R.layout.fragment_hue_color) {
         val availableInputs = arrayOf<View>(colorPickerView, ctBar, hueBar, satBar)
         val ctViews = arrayOf<View>(ctText, ctBar)
         val hueSatViews = arrayOf<View>(colorPickerView, hueSatText, hueBar, satBar)
-
-        // Slider labels
         ctBar.setLabelFormatter { value: Float ->
             HueUtils.ctToKelvin(value.toInt() + 153)
         }
@@ -65,8 +63,6 @@ class HueColorFragment : Fragment(R.layout.fragment_hue_color) {
         satBar.setLabelFormatter { value: Float ->
             HueUtils.satToPercent(value.toInt())
         }
-
-        // Slider tints
         SliderUtils.setSliderGradient(
             ctBar,
             intArrayOf(

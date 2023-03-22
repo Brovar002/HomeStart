@@ -45,6 +45,10 @@ class HueSceneActivity :
     SceneRecyclerViewHelperInterface,
     HueAdvancedLampInterface {
 
+    companion object {
+        const val TAG: String = "Hue Scene Activity"
+    }
+
     private var editing: Boolean = false
     private val lightStates: LightStates = LightStates()
     private lateinit var hueAPI: HueAPI
@@ -180,8 +184,12 @@ class HueSceneActivity :
         }
 
         nameBox.editText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, "Empty afterTextChanged")
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                Log.d(TAG, "Empty beforeTextChanged")
+            }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val string = s.toString()
                 if (string == "") {
@@ -194,7 +202,9 @@ class HueSceneActivity :
 
         briBar.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             @SuppressLint("RestrictedApi")
-            override fun onStartTrackingTouch(slider: Slider) {}
+            override fun onStartTrackingTouch(slider: Slider) {
+                Log.d(TAG, "Empty onStartTrackingTouch")
+            }
 
             @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {

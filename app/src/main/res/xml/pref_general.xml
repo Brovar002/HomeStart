@@ -83,7 +83,6 @@
             android:layout_height="wrap_content"
             app:iconSpaceReserved="false"
             app:key="sign_out"
-            app:summary="@string/pref_profile_id"
             app:title="@string/sign_out" />
     </PreferenceCategory>
 </PreferenceScreen>

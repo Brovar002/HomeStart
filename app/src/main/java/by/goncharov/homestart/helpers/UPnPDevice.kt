@@ -9,11 +9,7 @@ import java.lang.Exception
 class UPnPDevice internal constructor(val hostAddress: String, header: String) {
     internal val location: String
     val server: String
-
-    // XML content
     private var descriptionXML: String = ""
-
-    // From description XML
     var friendlyName: String = ""
     private var deviceType: String = ""
     private var presentationURL: String = ""
