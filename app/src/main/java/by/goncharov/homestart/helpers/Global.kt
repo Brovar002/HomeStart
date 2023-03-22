@@ -27,21 +27,27 @@ internal object Global {
     const val LOG_TAG: String = "HomeStart"
 
     const val DEFAULT_JSON: String = "{\"devices\":{}}"
+    private const val ESP_EASY: String = "ESP Easy"
+    private const val SHELLY_GEN_1: String = "Shelly Gen 1"
+    private const val SHELLY_GEN_2: String = "Shelly Gen 2"
+    private const val SIMPLEHOME_API: String = "SimpleHome API"
+    private const val TASMOTA: String = "Tasmota"
+    private const val HUE_API: String = "Hue API"
     val UNIFIED_MODES = arrayOf(
-        "ESP Easy",
-        "Shelly Gen 1",
-        "Shelly Gen 2",
-        "SimpleHome API",
-        "Tasmota",
-        "Hue API",
+        ESP_EASY,
+        SHELLY_GEN_1,
+        SHELLY_GEN_2,
+        SIMPLEHOME_API,
+        TASMOTA,
+        HUE_API,
     )
     val POWER_MENU_MODES = arrayOf(
-        "ESP Easy",
-        "Shelly Gen 1",
-        "Shelly Gen 2",
-        "SimpleHome API",
-        "Tasmota",
-        "Hue API",
+        ESP_EASY,
+        SHELLY_GEN_1,
+        SHELLY_GEN_2,
+        SIMPLEHOME_API,
+        TASMOTA,
+        HUE_API,
     )
 
     fun getCorrectAPI(
@@ -52,12 +58,12 @@ internal object Global {
         tasmotaHelperInterface: HomeRecyclerViewHelperInterface? = null,
     ): UnifiedAPI {
         return when (identifier) {
-            "ESP Easy" -> EspEasyAPI(context, deviceId, recyclerViewInterface)
-            "Hue API" -> HueAPI(context, deviceId, recyclerViewInterface)
-            "SimpleHome API" -> SimpleHomeAPI(context, deviceId, recyclerViewInterface)
-            "Tasmota" -> Tasmota(context, deviceId, tasmotaHelperInterface ?: recyclerViewInterface)
-            "Shelly Gen 1" -> ShellyAPI(context, deviceId, recyclerViewInterface, 1)
-            "Shelly Gen 2" -> ShellyAPI(context, deviceId, recyclerViewInterface, 2)
+            ESP_EASY -> EspEasyAPI(context, deviceId, recyclerViewInterface)
+            HUE_API -> HueAPI(context, deviceId, recyclerViewInterface)
+            SIMPLEHOME_API -> SimpleHomeAPI(context, deviceId, recyclerViewInterface)
+            TASMOTA -> Tasmota(context, deviceId, tasmotaHelperInterface ?: recyclerViewInterface)
+            SHELLY_GEN_1 -> ShellyAPI(context, deviceId, recyclerViewInterface, 1)
+            SHELLY_GEN_2 -> ShellyAPI(context, deviceId, recyclerViewInterface, 2)
             else -> UnifiedAPI(context, deviceId, recyclerViewInterface)
         }
     }
@@ -77,7 +83,6 @@ internal object Global {
             "raspberry pi" -> R.drawable.ic_device_raspberry_pi
             "router" -> R.drawable.ic_device_router
             "speaker" -> R.drawable.ic_device_speaker
-            "schwibbogen" -> R.drawable.ic_device_schwibbogen
             "stack" -> R.drawable.ic_device_stack
             "socket" -> R.drawable.ic_device_socket
             "thermometer" -> R.drawable.ic_device_thermometer
@@ -89,7 +94,7 @@ internal object Global {
     @RequiresApi(Build.VERSION_CODES.R)
     fun getDeviceType(icon: String): Int {
         return when (icon.lowercase()) {
-            "christmas tree", "electricity", "schwibbogen", "socket" -> DeviceTypes.TYPE_OUTLET
+            "electricity", "socket" -> DeviceTypes.TYPE_OUTLET
             "display", "display alt" -> DeviceTypes.TYPE_DISPLAY
             "gauge", "heating", "thermometer" -> DeviceTypes.TYPE_AC_HEATER
             "hygrometer" -> DeviceTypes.TYPE_HUMIDIFIER

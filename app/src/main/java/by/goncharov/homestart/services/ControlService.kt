@@ -13,6 +13,7 @@ import android.service.controls.actions.ControlAction
 import android.service.controls.templates.ControlButton
 import android.service.controls.templates.StatelessTemplate
 import android.service.controls.templates.ToggleTemplate
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.preference.PreferenceManager
@@ -32,6 +33,9 @@ import java.util.function.Consumer
 class ControlService : ControlsProviderService() {
 
     private var updateSubscriber: Flow.Subscriber<in Control>? = null
+    private companion object {
+        const val CONTROL_SERVICE = "ControlService"
+    }
 
     override fun createPublisherForAllAvailable(): Flow.Publisher<Control> {
         return Flow.Publisher { subscriber ->
@@ -89,6 +93,7 @@ class ControlService : ControlsProviderService() {
                             result: String,
                             shouldRefresh: Boolean,
                         ) {
+                            Log.d(CONTROL_SERVICE, "onExecuted")
                         }
                     })
             }
@@ -177,6 +182,7 @@ class ControlService : ControlsProviderService() {
                         result: String,
                         shouldRefresh: Boolean,
                     ) {
+                        Log.d(CONTROL_SERVICE, "onExecuted")
                     }
                 })
         } else {
@@ -188,8 +194,12 @@ class ControlService : ControlsProviderService() {
         return Flow.Publisher { subscriber ->
             updateSubscriber = subscriber
             subscriber.onSubscribe(object : Flow.Subscription {
-                override fun request(n: Long) {}
-                override fun cancel() {}
+                override fun request(n: Long) {
+                    Log.d(CONTROL_SERVICE, "request")
+                }
+                override fun cancel() {
+                    Log.d(CONTROL_SERVICE, "cancel")
+                }
             })
             controlIds.forEach { id ->
                 loadStatefulControl(subscriber, id)
@@ -216,6 +226,7 @@ class ControlService : ControlsProviderService() {
                             holder: UnifiedRequestCallback,
                             recyclerViewInterface: HomeRecyclerViewHelperInterface?,
                         ) {
+                            Log.d(CONTROL_SERVICE, "onItemsLoaded")
                         }
 
                         override fun onExecuted(result: String, shouldRefresh: Boolean) {

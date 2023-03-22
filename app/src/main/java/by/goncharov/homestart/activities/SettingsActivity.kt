@@ -15,9 +15,13 @@ import by.goncharov.homestart.helpers.Devices
 import by.goncharov.homestart.helpers.Global
 import by.goncharov.homestart.helpers.Pref
 import by.goncharov.homestart.helpers.Theme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class SettingsActivity : AppCompatActivity() {
 
+    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
@@ -29,6 +33,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class GeneralPreferenceFragment : PreferenceFragmentCompat() {
+        private lateinit var auth: FirebaseAuth
         private val prefsChangedListener =
             SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                 if (key == Pref.PREF_THEME) requireActivity().recreate()
@@ -36,6 +41,8 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            auth = Firebase.auth
+            auth.currentUser
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(
                 prefsChangedListener,
             )
@@ -76,6 +83,11 @@ class SettingsActivity : AppCompatActivity() {
             }
             findPreference<Preference>("about")?.setOnPreferenceClickListener {
                 startActivity(Intent(context, AboutActivity::class.java))
+                true
+            }
+            findPreference<Preference>("sign_out")?.setOnPreferenceClickListener {
+                auth.signOut()
+                startActivity(Intent(context, LoginActivity::class.java))
                 true
             }
         }

@@ -10,8 +10,6 @@ class EspEasyAPIParser(resources: Resources, api: UnifiedAPI?) : UnifiedAPI.Pars
 
     override fun parseResponse(response: JSONObject): ArrayList<ListViewItem> {
         val listItems = arrayListOf<ListViewItem>()
-
-        // sensors
         val sensors = response.optJSONArray("Sensors") ?: JSONArray()
         for (sensorId in 0 until sensors.length()) {
             val currentSensor = sensors.getJSONObject(sensorId)
@@ -99,8 +97,6 @@ class EspEasyAPIParser(resources: Resources, api: UnifiedAPI?) : UnifiedAPI.Pars
 
     override fun parseStates(response: JSONObject): ArrayList<Boolean?> {
         val listItems = arrayListOf<Boolean?>()
-
-        // sensors
         val sensors = response.optJSONArray("Sensors") ?: JSONArray()
         for (sensorId in 0 until sensors.length()) {
             val currentSensor = sensors.getJSONObject(sensorId)

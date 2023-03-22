@@ -54,7 +54,7 @@ open class UnifiedAPI(
         }
     }
 
-    open fun loadStates(callback: RealTimeStatesCallback, offset: Int) {}
+    open fun loadState(callback: RealTimeStatesCallback, offset: Int) {}
     open fun execute(path: String, callback: CallbackInterface) {}
     open fun changeSwitchState(id: String, state: Boolean) {}
 

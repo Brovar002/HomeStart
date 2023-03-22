@@ -15,6 +15,33 @@
         <item name="colorSurface">@color/colorPrimary</item>
         <item name="dividerColorValue">@color/dividerLight</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="button_reg">@color/colorAccent</item>
+        <item name="intro_icon">@drawable/ic_home_accent</item>
+    </style>
+
+    <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Dark Buttons -->
+    <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/gray</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme27">
@@ -28,6 +55,8 @@
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="dividerColorValue">@color/dividerDark</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="intro_icon">@drawable/ic_home_white</item>
+        <item name="button_reg">@color/colorAccent</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="31">false</item>
     </style>
 
@@ -118,4 +147,12 @@
     <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <dimen name="icon_top_margin">24dp</dimen>
+    <dimen name="icon_bottom_margin">24dp</dimen>
 </resources>

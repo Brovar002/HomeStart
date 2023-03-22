@@ -6,6 +6,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -86,7 +87,9 @@ class ShortcutHueSceneActivity : AppCompatActivity(), RecyclerViewHelperInterfac
                         }
                     }
 
-                    override fun onExecuted(result: String, shouldRefresh: Boolean) {}
+                    override fun onExecuted(result: String, shouldRefresh: Boolean) {
+                        Log.d("Shortcut Hue Scene Activity", "Empty onExecuted")
+                    }
                 },
             )
         } else if (group == null) {

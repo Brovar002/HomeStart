@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.ContextMenu
 import android.view.Gravity
 import android.view.MenuItem
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             "Node-RED",
             "Website",
         )
+        const val TAG: String = "Main Activity"
     }
 
     private var tasmotaPosition: Int = 0
@@ -73,10 +75,6 @@ class MainActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(this)
             .getString(Pref.PREF_COLUMNS, Pref.PREF_COLUMNS_DEFAULT) ?: Pref.PREF_COLUMNS_DEFAULT
         ).toIntOrNull()
-
-    /*
-     * Unified callbacks
-     */
     private var unified: UnifiedAPI? = null
     private val unifiedRequestCallback = object : UnifiedAPI.CallbackInterface {
         override fun onItemsLoaded(
@@ -142,12 +140,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /*
-     * Things related to Tasmota
-     */
     private val tasmotaHelperInterface = object : HomeRecyclerViewHelperInterface {
-        override fun onStateChanged(view: View, data: ListViewItem, state: Boolean) {}
+        override fun onStateChanged(view: View, data: ListViewItem, state: Boolean) {
+            Log.d(TAG, "Empty onStateChanged")
+        }
         override fun onItemClicked(view: View, data: ListViewItem) {
             val helper = TasmotaHelper(this@MainActivity, unified ?: return)
             when (data.hidden) {
@@ -160,10 +156,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /*
-     * Things related to the main menu
-     */
     private val mainHelperInterface = object : HomeRecyclerViewHelperInterface {
         override fun onStateChanged(view: View, data: ListViewItem, state: Boolean) {
             if (data.hidden.isEmpty()) return
@@ -199,6 +191,7 @@ class MainActivity : AppCompatActivity() {
                             holder: UnifiedRequestCallback,
                             recyclerViewInterface: HomeRecyclerViewHelperInterface?,
                         ) {
+                            Log.d(TAG, "Empty onItemLoaded")
                         }
 
                         override fun onExecuted(result: String, shouldRefresh: Boolean) {
@@ -220,6 +213,7 @@ class MainActivity : AppCompatActivity() {
                                         result: String,
                                         shouldRefresh: Boolean,
                                     ) {
+                                        Log.d(TAG, "Empty onExecuted")
                                     }
                                 })
                             }
@@ -238,10 +232,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /*
-     * Activity methods
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.setNoActionBar(this)
         super.onCreate(savedInstanceState)
@@ -297,8 +287,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.menu_icon).setOnClickListener {
             startActivityAndReset(Intent(this, SettingsActivity::class.java))
         }
-
-        // Handle shortcut
         if (intent.hasExtra("device")) {
             val deviceId = intent.getStringExtra("device") ?: ""
             if (devices.idExists(deviceId)) {
@@ -431,7 +419,7 @@ class MainActivity : AppCompatActivity() {
                 unified?.loadList(unifiedRequestCallback, true)
                 updateHandler.setUpdateFunction {
                     if (canReceiveRequest && unified?.needsRealTimeData == true) {
-                        unified?.loadStates(unifiedRealTimeStatesCallback, 0)
+                        unified?.loadState(unifiedRealTimeStatesCallback, 0)
                     }
                 }
             }
@@ -488,6 +476,7 @@ class MainActivity : AppCompatActivity() {
                                     result: String,
                                     shouldRefresh: Boolean,
                                 ) {
+                                    Log.d(TAG, "Empty onExecuted")
                                 }
                             })
                         }
@@ -511,7 +500,7 @@ class MainActivity : AppCompatActivity() {
             if (canReceiveRequest) {
                 for (i in registeredForUpdates.keys) {
                     if (registeredForUpdates[i]?.needsRealTimeData == true) {
-                        registeredForUpdates[i]?.loadStates(
+                        registeredForUpdates[i]?.loadState(
                             unifiedRealTimeStatesCallback,
                             adapter.getOffset(i),
                         )

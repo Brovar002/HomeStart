@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="dividerColorValue" format="reference" />
+    <attr name="dividerColorValue" format="reference"/>
+    <attr name="intro_icon"/>
+    <attr name="button_reg"/>
 </resources>

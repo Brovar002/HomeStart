@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -34,24 +35,35 @@ import com.google.android.material.textfield.TextInputLayout
 class EditDeviceActivity : AppCompatActivity() {
 
     companion object {
+        private const val ESP_EASY: String = "ESP Easy"
+        private const val SHELLY_GEN_1: String = "Shelly Gen 1"
+        private const val SHELLY_GEN_2: String = "Shelly Gen 2"
+        private const val SIMPLEHOME_API: String = "SimpleHome API"
+        private const val TASMOTA: String = "Tasmota"
+        private const val HUE_API: String = "Hue API"
+        private const val NODE_RED: String = "Node-RED"
+        private const val TAG: String = "Edit Device Activity"
+        private const val AFTER_TEXT: String = "Empty afterTextChanged"
+        private const val BEFORE_TEXT: String = "Empty beforeTextChanged"
+
         private val SUPPORTS_DIRECT_VIEW = arrayOf(
-            "ESP Easy",
-            "Hue API",
-            "Shelly Gen 1",
-            "Shelly Gen 2",
-            "SimpleHome API",
-            "Tasmota",
+            ESP_EASY,
+            SHELLY_GEN_1,
+            SHELLY_GEN_2,
+            SIMPLEHOME_API,
+            TASMOTA,
+            HUE_API,
         )
         private val HAS_CONFIG = arrayOf(
-            "Hue API",
-            "ESP Easy",
-            "Node-RED",
-            "Shelly Gen 1",
-            "Shelly Gen 2",
+            HUE_API,
+            ESP_EASY,
+            NODE_RED,
+            SHELLY_GEN_1,
+            SHELLY_GEN_2,
         )
         private val HAS_INFO = arrayOf(
-            "Hue API",
-            "Shelly Gen 2",
+            HUE_API,
+            SHELLY_GEN_2,
         )
     }
 
@@ -90,19 +102,27 @@ class EditDeviceActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.idTxt).text = (resources.getString(R.string.pref_add_id, deviceId))
 
         iconSpinner.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, AFTER_TEXT)
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                Log.d(TAG, BEFORE_TEXT)
+            }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 deviceIcn.setImageResource(Global.getIcon(s.toString()))
             }
         })
         modeSpinner.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, AFTER_TEXT)
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                Log.d(TAG, BEFORE_TEXT)
+            }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val string = s.toString()
-                val specialVisibility = if (string == "Fritz! Auto-Login" || string == "Shelly Gen 1") View.VISIBLE else View.GONE
-                val usernameVisibility = if (string == "Shelly Gen 1") View.VISIBLE else View.GONE
+                val specialVisibility = if (string == "Fritz! Auto-Login" || string == SHELLY_GEN_1) View.VISIBLE else View.GONE
+                val usernameVisibility = if (string == SHELLY_GEN_1) View.VISIBLE else View.GONE
                 specialDivider.visibility = specialVisibility
                 specialSection.visibility = specialVisibility
                 usernameBox.visibility = usernameVisibility
@@ -131,8 +151,12 @@ class EditDeviceActivity : AppCompatActivity() {
             }
         })
         nameBox.editText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, AFTER_TEXT)
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                Log.d(TAG, BEFORE_TEXT)
+            }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val string = s.toString()
                 if (string == "") {
@@ -157,21 +181,21 @@ class EditDeviceActivity : AppCompatActivity() {
 
             configBtn.setOnClickListener {
                 when (modeSpinner.text.toString()) {
-                    "ESP Easy", "Shelly Gen 1", "Shelly Gen 2" -> {
+                    ESP_EASY, SHELLY_GEN_1, SHELLY_GEN_2 -> {
                         startActivity(
                             Intent(this, WebActivity::class.java)
                                 .putExtra("URI", addressBox.editText?.text.toString())
                                 .putExtra("title", resources.getString(R.string.pref_device_config)),
                         )
                     }
-                    "Node-RED" -> {
+                    NODE_RED -> {
                         startActivity(
                             Intent(this, WebActivity::class.java)
                                 .putExtra("URI", formatNodeREDAddress(addressBox.editText?.text.toString()))
                                 .putExtra("title", resources.getString(R.string.pref_device_config)),
                         )
                     }
-                    "Hue API" -> {
+                    HUE_API -> {
                         val huePackageName = "com.philips.lighting.hue2"
                         val launchIntent = packageManager.getLaunchIntentForPackage(huePackageName)
                         if (launchIntent == null) {
@@ -275,7 +299,7 @@ class EditDeviceActivity : AppCompatActivity() {
             }
 
             val tempAddress =
-                if (modeSpinner.text.toString() == "Node-RED") {
+                if (modeSpinner.text.toString() == NODE_RED) {
                     formatNodeREDAddress(addressBox.editText?.text.toString())
                 } else {
                     addressBox.editText?.text.toString()

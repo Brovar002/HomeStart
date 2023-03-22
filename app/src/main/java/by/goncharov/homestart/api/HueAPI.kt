@@ -82,7 +82,7 @@ class HueAPI(
         queue.add(jsonObjectRequest)
     }
 
-    override fun loadStates(callback: RealTimeStatesCallback, offset: Int) {
+    override fun loadState(callback: RealTimeStatesCallback, offset: Int) {
         if (!readyForRequest) return
         val jsonObjectRequest =
             JsonObjectRequest(

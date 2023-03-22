@@ -23,12 +23,15 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppThemeDark"
-        tools:targetApi="31"
-        android:roundIcon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.HueSceneActivity"
             android:parentActivityName=".activities.MainActivity" />
@@ -61,7 +64,8 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop"
-            android:theme="@style/AppThemeDark.NoActionBar" />
+            android:theme="@style/AppThemeDark.NoActionBar"
+            android:parentActivityName=".activities.LoginActivity"/>
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/pref"
@@ -147,6 +151,5 @@
             </intent-filter>
         </service>
     </application>
-
 
 </manifest>

@@ -1,6 +1,7 @@
 package by.goncharov.homestart.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import by.goncharov.homestart.api.Tasmota
@@ -24,6 +25,7 @@ class ShortcutTasmotaActionActivity : AppCompatActivity() {
                         holder: UnifiedRequestCallback,
                         recyclerViewInterface: HomeRecyclerViewHelperInterface?,
                     ) {
+                        Log.d("Shortcut Tasmota Action Activity", "Empty onItemLoaded")
                     }
 
                     override fun onExecuted(result: String, shouldRefresh: Boolean) {
