@@ -42,7 +42,9 @@ class EditDeviceActivity : AppCompatActivity() {
         private const val TASMOTA: String = "Tasmota"
         private const val HUE_API: String = "Hue API"
         private const val NODE_RED: String = "Node-RED"
-        private const val EDIT_DEVICE: String = "Edit Device Activity"
+        private const val TAG: String = "Edit Device Activity"
+        private const val AFTER_TEXT: String = "Empty afterTextChanged"
+        private const val BEFORE_TEXT: String = "Empty beforeTextChanged"
 
         private val SUPPORTS_DIRECT_VIEW = arrayOf(
             ESP_EASY,
@@ -101,18 +103,22 @@ class EditDeviceActivity : AppCompatActivity() {
 
         iconSpinner.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                Log.d(EDIT_DEVICE, "Empty afterTextChanged")
+                Log.d(TAG, AFTER_TEXT)
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                Log.d(EDIT_DEVICE, "Empty beforeTextChanged")
+                Log.d(TAG, BEFORE_TEXT)
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 deviceIcn.setImageResource(Global.getIcon(s.toString()))
             }
         })
         modeSpinner.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, AFTER_TEXT)
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                Log.d(TAG, BEFORE_TEXT)
+            }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val string = s.toString()
                 val specialVisibility = if (string == "Fritz! Auto-Login" || string == SHELLY_GEN_1) View.VISIBLE else View.GONE
@@ -146,10 +152,10 @@ class EditDeviceActivity : AppCompatActivity() {
         })
         nameBox.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                Log.d(EDIT_DEVICE, "Empty afterTextChanged")
+                Log.d(TAG, AFTER_TEXT)
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                Log.d(EDIT_DEVICE, "Empty beforeTextChanged")
+                Log.d(TAG, BEFORE_TEXT)
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val string = s.toString()
